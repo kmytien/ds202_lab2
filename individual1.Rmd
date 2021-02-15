@@ -1,6 +1,6 @@
 ---
 title: 'DS 202: Lab 2'
-author: "MyTien Kien; kmytien"
+author: "MyTien Kien; kmytien, Tanner Dunn; tcdunn"
 date: "2/15/2021"
 output: html_document
 ---
@@ -40,10 +40,7 @@ From this barplot, I think the more developed/populated the country/location, th
 ```{r plot4}
 cor(choco$Cocoa_Percent, choco$Rating)
 summary(choco[c("Cocoa_Percent", "Rating")])
-
-boxplot(choco$Cocoa_Percent)
-rate <- choco[c("Cocoa_Percent", "Rating")]
-str(rate)
+plot(choco$Rating, choco$Cocoa_Percent, xlab = 'Rating', ylab = 'Cocoa Percent')
 ```
 
-From these functions
+From these functions, we noticed that Cocoa_Percent and Rating do not have any correlation at all. The correlation number is very close to zero, meaning that ratings depend very little to nothing at all on Cocoa_Percent.
