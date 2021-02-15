@@ -1,0 +1,24 @@
+---
+title: "Lab 2"
+author: Tanner Dunn, MyTien Kien
+output: html_document
+---
+
+```{r}
+choco <- read.csv("https://raw.githubusercontent.com/xdaiISU/ds202materials/master/hwlabs/data/choco.csv")
+str(choco)
+
+#Creating histogram and boxplot to show the distributions of rating.
+#This histogram appears to be skewed left
+hist(choco$Rating, main = "Distribution of Chocolate Ratings")
+
+#This boxplot shows four outlier points which all fall below about 2.25 on the rating scale. 
+boxplot(choco$Rating, main = "Distribution of Choclate Ratings")
+
+#This is a barplot of the number of ratings per location. The one with the most is the U.S.A.
+barplot(table(choco$Location),las = 2, cex.names = 0.6)
+
+```
+
+
+
