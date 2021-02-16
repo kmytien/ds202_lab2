@@ -1,0 +1,65 @@
+---
+title: 'DS 202: Lab 2'
+author: "MyTien Kien; kmytien, Tanner Dunn; tcdunn"
+date: "2/15/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r chocolate}
+choco <- read.csv("https://raw.githubusercontent.com/xdaiISU/ds202materials/master/hwlabs/data/choco.csv") 
+str(choco) 
+```
+
+**1.** How are the ratings distributed? Create both a histogram and a boxplot and describe them. Don’t forget to mention outliers, if there are any.
+```{r plots0}
+hist(choco$Rating, xlab = 'Rating')
+```
+
+Shown here in the histogram, there are many outliers in the chocolate's ratings. Most of these outliers are ratings of 1.0 to 2.0. Another thing about this histogram is that it's skewed heavily to the left.
+
+```{r plot1}
+boxplot(choco$Rating, main = 'Boxplot of Choco Ratings')
+```
+
+Shown here in the boxplot diagram, it shows that the median of all chocolate ratings are between 3.0 and 3.5. The outliers are also shown here, showing four outliers of 1.0, 1.5, 1.75 and 2.0. It shows the range being 2.25 to 4.0 (with the exception of the outliers).
+
+
+**2.** How does the number of ratings depend on the location of the company? Draw a bar chart of the number of reports.
+```{r plot3}
+barplot(table(choco$Location), las = 2, cex.names = 0.5)
+```
+
+From this barplot, I think the more developed/populated the country/location, the higher amount of ratings there are.
+
+
+**3.** Do ratings depend on the cacao percentage of a chocolate bar? Create both numerical and graphical summaries, and explain.
+```{r plot4}
+cor(choco$Cocoa_Percent, choco$Rating)
+summary(choco[c("Cocoa_Percent", "Rating")])
+plot(choco$Rating, choco$Cocoa_Percent, xlab = 'Rating', ylab = 'Cocoa Percent')
+```
+
+From these functions, we noticed that Cocoa_Percent and Rating do not have any correlation at all. The correlation number is very close to zero, meaning that ratings depend very little to nothing at all on Cocoa_Percent.
+
+**4.** How do different bean origins compare in terms of the flavor of chocolates? Are beans from some places better than the other? Create both numerical and graphical summaries, and explain.
+```{r plot5}
+#Print out the top 50 Ratings of bean origins
+origin_ratings <- aggregate(Rating ~ Bean_Origin, data = choco, FUN= max)
+head(origin_ratings[order(-origin_ratings$Rating),], n = 50)
+
+#group by origin
+origin <- group_by(choco, choco$Bean_Origin)
+#get the average ratings and count
+origin1 <- summarise(origin, ave_rating = mean(Rating, na.rm=TRUE), count = n())
+#filter out all of the places that only had one rating (there were a lot)
+origin2 <- filter(origin1, count>1)
+plot(x=factor(origin2$`choco$Bean_Origin`), y=origin2$ave_rating, las = 2, ylab = 'Average Rating', xlab = 'Bean Origin')
+#barplot(origin2$ave_rating ~ origin2$`choco$Bean_Origin`, las = 2, ylab = 'Average Rating', xlab = 'Bean Origin')
+```
+
+From the numerical data looking at the top rated bean origin's ratings you can see the 24 bean origin's that have
+produced a rating of 4.0 which is the highest. Then we decided to graph the mean rating's of Bean_Origin. There isn't a ton of variability but Tobago stand out with the highest mean. In conclusion a bean's origin does not seem to have a big impact on the chocolate's rating. 
