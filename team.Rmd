@@ -1,6 +1,6 @@
 ---
 title: 'DS 202: Lab 2'
-author: "MyTien Kien; kmytien, Tanner Dunn; tcdunn"
+author: "MyTien Kien; kmytien, Tanner Dunn; tcdunn "
 date: "2/15/2021"
 output: html_document
 ---
