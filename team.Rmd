@@ -7,6 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
 ```
 
 ```{r chocolate}
@@ -47,9 +48,9 @@ From these functions, we noticed that Cocoa_Percent and Rating do not have any c
 
 **4.** How do different bean origins compare in terms of the flavor of chocolates? Are beans from some places better than the other? Create both numerical and graphical summaries, and explain.
 ```{r plot5}
-#Print out the top 50 Ratings of bean origins
+#Print out the top 30 Ratings of bean origins
 origin_ratings <- aggregate(Rating ~ Bean_Origin, data = choco, FUN= max)
-head(origin_ratings[order(-origin_ratings$Rating),], n = 50)
+head(origin_ratings[order(-origin_ratings$Rating),], n = 30)
 
 #group by origin
 origin <- group_by(choco, choco$Bean_Origin)
@@ -57,9 +58,29 @@ origin <- group_by(choco, choco$Bean_Origin)
 origin1 <- summarise(origin, ave_rating = mean(Rating, na.rm=TRUE), count = n())
 #filter out all of the places that only had one rating (there were a lot)
 origin2 <- filter(origin1, count>1)
-plot(x=factor(origin2$`choco$Bean_Origin`), y=origin2$ave_rating, las = 2, ylab = 'Average Rating', xlab = 'Bean Origin')
+plot(x=factor(origin2$`choco$Bean_Origin`), y=origin2$ave_rating, las = 2, ylab = 'Average Rating', xlab = 'Bean Origin', main = "Average Rating of Bean Origins")
 #barplot(origin2$ave_rating ~ origin2$`choco$Bean_Origin`, las = 2, ylab = 'Average Rating', xlab = 'Bean Origin')
 ```
 
 From the numerical data looking at the top rated bean origin's ratings you can see the 24 bean origin's that have
-produced a rating of 4.0 which is the highest. Then we decided to graph the mean rating's of Bean_Origin. There isn't a ton of variability but Tobago stand out with the highest mean. In conclusion a bean's origin does not seem to have a big impact on the chocolate's rating. 
+produced a rating of 4.0 which is the highest. Then we decided to graph the mean rating's of Bean_Origin. There isn't a ton of variability but Tobago stand out with the highest mean. In conclusion a bean's origin does not seem to have a big impact on the chocolate's rating.
+
+**5.** Brainstorm two analyses you would like to perform (with your teammates). Describe in plain language what comparisons are you making. Create suitable numerical and graphical summaries for your analyses. Describe the results.
+```{r plot6}
+above70 <- choco[choco$Cocoa_Percent >= '70%', ]
+below70 <- choco[choco$Cocoa_Percent < '70%', ]
+mean(above70$Rating)
+mean(below70$Rating)
+barplot(table(above70$Rating), xlab = 'Rating', ylab = 'Entries with >= 70% Cocoa', main = 'Ratings of Chocolates with 70%+ Cocoa')
+barplot(table(below70$Rating), xlab = 'Rating', ylab = 'Entries with < 70% Cocoa', main = 'Ratings of Chocolates with <70%Cocoa')
+```
+For the first analysis, we wanted to see how much of an effect Cocoa Percent had on taste of chocolate. We saw that a lot of chocolates had 70% cocoa, and decided to split the data into two categories, 70% and above & below 70%. We saw that both had a Rating mean of around 3.2, but chocolates with below 70% cocoa had the higher rating. Although one had the higher average rating, we felt like cocoa percent didn't have too much of an effect on taste.
+
+```{r plot7}
+CRatings <- group_by(choco, choco$Company)
+CRatings2 <- summarise(CRatings, Comp_Rating = mean(Rating, na.rm=TRUE))
+CRatings3 <- head(order(factor(CRatings2$Comp_Rating), decreasing = TRUE), n = 10)
+plot(x=factor(CRatings2$`choco$Company`), y=CRatings2$Comp_Rating, las = 2, ylab = 'Ratings', xlab = 'Company', main = 'Companies Average Rating')
+choco$Company[CRatings3]
+```
+The next thing we wanted to see was what Company has the highest average rating. Before printing out the graph we didn't realize there was over 500 companies so seeing the highest rated ones was a bit difficult. So we decided to also print out the top 10. The highest average rated company is the "Chocolate Makers".
